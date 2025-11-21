@@ -10,8 +10,10 @@ Ac = 1
 fc = 4400
 bs = 1 / Tb
 wc = 27646    # rad/s
-alpha = 2*np.pi*200
-
+alpha = 2 * np.pi * 200
+# Ar = |H(w)| * Ac
+tr = 1
+phi = -wc*tr
 
 # Message to be transmitted
 data = "Hello World!"

@@ -55,26 +55,26 @@ def main():
 
     # Encode baseband signal
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
-    xb = wcs.encode_baseband_signal(bs, Tb, 1/dt)   # Task 4a)
+    xb = wcs.encode_baseband_signal(bs, Tb, 1/dt)       # Task 4a)
 
     # TODO: Implement transmitter code here
-    t = np.arange(0, xb.shape[0]) * dt  # (1/dt)
+    t = np.arange(0, xb.shape[0]) * dt  
     t1 = 10*Tb
     # plot = int(np.ceil(t1/dt))
     
     # Ensure the signal is mono, then play through speakers
-    xc = Ac * np.sin(wc * t)                           # Task 4b)
+    xc = Ac * np.sin(wc * t)                            # Task 4b
     xm = xb * xc
     xt = xm
-    yd = xm * np.sin(wc*t)
+    yd = xm * np.sin(wc * t)
 
     xt = np.stack((xt, np.zeros(xt.shape)), axis=1)
     sd.play(xt, 1/dt, blocking=True)
     
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10,10))
-    plt.title("Task Simulation")
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10,15))
     
     #### TASK 4A ####
+    plt.title("Task 4a")
     ax1.plot(t, xb, label="xb(t)")
     ax1.legend()
     ax1.set_xlabel("t (s)")
@@ -83,6 +83,7 @@ def main():
     ax1.grid()
 
     #### TASK 4B ####
+    plt.title("Task 4b")
     ax2.plot(t, xm, label="xm(t)")
     ax2.legend()
     ax2.set_xlabel("t (s)")
@@ -91,6 +92,7 @@ def main():
     ax2.grid()
     
     #### TASK 4C ####
+    plt.title("Task 4c")
     ax3.plot(t, yd, label="yd(t)")
     ax3.legend()
     ax3.set_xlabel("t (s)")
@@ -99,7 +101,7 @@ def main():
     ax3.grid()
 
     fig.savefig('lab1_task4.png')
-    plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":    
