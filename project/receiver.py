@@ -140,8 +140,8 @@ def main():
     # Symbol decoding
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     br = wcs.decode_baseband_signal(yb, Tb, 1/dt)
-    data_rx = wcs.decode_string(br)
-    print(f'Received: {data_rx} (no of bits: {len(br)}).')
+    # data_rx = wcs.decode_string(br)
+    print(f'Received: {br} (no of bits: {len(br)}).')
 
 
 if __name__ == "__main__":    
