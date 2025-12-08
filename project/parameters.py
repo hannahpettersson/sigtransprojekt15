@@ -3,7 +3,7 @@ import wcslib as wcs
 
 # TODO: Add your parameters here. You might need to add other parameters as well.
 channel_id = 17
-Tb = 0.01
+Tb = 0.02
 fs = 4400
 dt = 1/22050
 Ac = 1
@@ -14,6 +14,11 @@ alpha = 2 * np.pi * 200
 # Ar = |H(w)| * Ac
 tr = 1
 phi = -wc*tr
+
+# Lab 2
+K = 10
+s_freq = fs * K
+Ts = 1 / s_freq
 
 # Message to be transmitted
 data = "Hello World!"
