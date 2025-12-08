@@ -36,14 +36,14 @@ def main():
 
     # Receive signal
     print(f'Receiving for {T} s.')
-    yr = sd.rec(int(T/dt), samplerate=1/dt, channels=1, blocking=True)
+    yr = sd.rec(int(T/Ts), samplerate=s_freq, channels=1, blocking=True)
     yr = yr[:, 0]           # Remove second channel
 
     # TODO: Implement demodulation, etc. here
     # ...
 
     # Baseband signal
-    t = np.arange(0, yr.shape[0]) * dt  
+    t = np.arange(0, yr.shape[0]) * Ts  
 
     yd = yr * np.sin(wc * t)
     
