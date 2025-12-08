@@ -4,7 +4,7 @@ import wcslib as wcs
 # TODO: Add your parameters here. You might need to add other parameters as well.
 channel_id = 17
 Tb = 0.02
-fs = 4400
+fs = 4400 # används ej i lab 2
 dt = 1/22050 # Används ej i lab 2
 Ac = 1
 fc = 4400
@@ -16,8 +16,8 @@ tr = 1
 phi = -wc*tr
 
 # Lab 2
-K = 10
-s_freq = fs * K
+K = 5
+s_freq = fc * K
 Ts = 1 / s_freq
 
 # Message to be transmitted
