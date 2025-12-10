@@ -21,7 +21,7 @@ import sounddevice as sd
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
-from parameters import Tb, Ac, s_freq, Ts, wc
+from parameters import Tb, Ac, s_freq, Ts, wc, bb, ab, xm
 
 
 def main():
@@ -62,6 +62,9 @@ def main():
     t = np.arange(0, xb.shape[0]) * Ts 
     xc = Ac * np.sin(wc * t)                            
     xm = xb * xc
+    #bandpass filter
+    xm = signal.lfilter(bb, ab, xm)
+
     xt = xm
 
     # Ensure the signal is mono, then play through speakers

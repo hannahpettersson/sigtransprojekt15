@@ -15,7 +15,7 @@ import sounddevice as sd
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
-from parameters import Tb, dt, alpha, wc, Ts, s_freq, Ac, data # ...
+from parameters import Tb, dt, alpha, wc, Ts, s_freq, Ac, data, bb, ab # ...
 
 def main():
     parser = argparse.ArgumentParser(
@@ -41,7 +41,8 @@ def main():
 
     # TODO: Implement demodulation, etc. here
     # ...
-
+    #bandpass filter
+    yr = signal.lfilter(bb, ab, yr)
     # Baseband signal
     t = np.arange(0, yr.shape[0]) * Ts  
 
