@@ -17,12 +17,18 @@ import argparse
 import numpy as np
 from scipy import signal
 import sounddevice as sd
-
+from scipy.signal import sosfreqz
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
-from parameters import Tb, Ac, s_freq, Ts, wc, bb, ab, xm
+from parameters import Tb, Ac, s_freq, Ts, wc, wp_dig, ws_dig, Ap, As, f_nyquist
 
+#BP FILTER
+Nc_d, w_c_d = signal.cheb2ord(wp_dig, ws_dig, Ap, As, analog=False)
+Nc_d = int(np.ceil(Nc_d))
+cb_d, ca_d = signal.iirdesign(wp=wp_dig, ws=ws_dig, gpass=Ap, gstop=As, ftype='cheby2', output='ba', analog=False)
+wb_d, hc_d = signal.freqz(cb_d, ca_d)
+f_bp_d = wb_d * f_nyquist / np.pi
 
 def main():
     parser = argparse.ArgumentParser(
@@ -58,19 +64,13 @@ def main():
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     xb = wcs.encode_baseband_signal(bs, Tb, s_freq)
 
-    # TODO: Implement transmitter code here
     t = np.arange(0, xb.shape[0]) * Ts 
-    xc = Ac * np.sin(wc * t)                            
+    xc = Ac * np.sin(wc * t)
     xm = xb * xc
-    #bandpass filter
-    xm = signal.lfilter(bb, ab, xm)
-
-    xt = xm
-
+    xt_filt = signal.lfilter(cb_d, ca_d, xm)
     # Ensure the signal is mono, then play through speakers
-    xt = np.stack((xt, np.zeros(xt.shape)), axis=1)
-    sd.play(xt, s_freq, blocking=True)
-
+    xt_play = np.stack((xt_filt, np.zeros(xt_filt.shape)), axis=1)
+    sd.play(xt_play, s_freq, blocking=True)
 
 if __name__ == "__main__":    
     main()
