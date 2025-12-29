@@ -56,17 +56,29 @@ def main():
     # TODO: Implement demodulation, etc. here
     # ...
     
-    yr_filt = signal.lfilter(cb_d, ca_d, yr) #bandpass filter
-    t_1 = np.arange(len(yr_filt)) /s_freq
+    yr_filt = signal.lfilter(cb_d, ca_d, yr) #bandpass filter, vill bara släppa igenom våra wanted frequencies
+    t_1 = np.arange(len(yr_filt)) /s_freq #tidsvektor, vi behöver rätt tidsindex
 
     # Calculate complex baseband signal
-    ybi = yr_filt * 2 * np.cos(wc*t_1)
+    ybi = 2 * yr_filt * np.cos(wc * t_1) # 2 för att vi tappar amplitud vid multiplication, in phase komponenten
+    #
     ybi = signal.lfilter(b_lp_d, a_lp_d, ybi)
-    ybq = yr_filt * (-2) * np.sin(wc*t_1)
+    ybq = 2 * yr_filt * np.sin(wc * t_1) # Lågpassfiltrerar och tar bort högfrekventa komponente, för att klara av fasförskjutningen, q komponenten
     ybq = signal.lfilter(b_lp_d, a_lp_d, ybq)
 
     yb = ybi + 1j*ybq
+#below funkar för hello world men ej för längre meddelanden
+    #gamma = 0.2 * np.max(np.abs(yb)) #skapa threshold baserad på max amplitud från signalen (strongest frequency)
+    #start = np.argmax(np.abs(yb) > gamma) # Hittar första sampel där signalens magnitud överstiger threshold gamma
 
+    #yb = yb[start:] # vi vill börha lyssna när signalen överstiger denna threshold -> blir av med allt brus innan start
+    
+    mag = np.abs(yb) # lite samma sak men här tar vi max apmlitud fron signalen
+    active = mag > 0.2 * np.max(mag) # vi lyssnar aktivt när signalen är inom intervallet av 80%
+# Find first and last active samples
+    start = np.argmax(active) # börha lyssna
+    end = len(active) - np.argmax(active[::-1]) 
+    yb = yb[start:end]
     # Symbol decoding
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     br = wcs.decode_baseband_signal(yb, Tb, s_freq)
