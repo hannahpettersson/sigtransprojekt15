@@ -15,7 +15,7 @@ import sounddevice as sd
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
-from parameters import Tb, dt, alpha, wc, Ts, s_freq, Ac, data, bb, ab # ...
+from parameters import Tb, dt, alpha, wc, Ts, s_freq, Ap_lp, As_lp, wp_lp_norm_d, ws_lp_norm_d, f_nyquist, Ac, data, bb, ab # ...
 
 def main():
     parser = argparse.ArgumentParser(
@@ -42,7 +42,17 @@ def main():
     # TODO: Implement demodulation, etc. here
     # ...
     #bandpass filter
-    yr = signal.lfilter(bb, ab, yr)
+    # yr = signal.lfilter(bb, ab, yr)
+
+    # cheby2 filter
+    N_lp_d, Wn_lp_d = signal.buttord(wp_lp_norm_d, ws_lp_norm_d, Ap_lp, As_lp, analog=False)
+    N_lp_d = np.abs(np.ceil(N_lp_d))
+    b_lp_d, a_lp_d = signal.iirdesign(wp=wp_lp_norm_d, ws=ws_lp_norm_d, gpass=Ap_lp, gstop=As_lp, ftype='butter', output='ba', analog=False)
+
+    # Lowpass filter coefficients: b_lp, a_lp
+    w_lp_d, h_lp_d = signal.freqz(b_lp_d, a_lp_d)
+    f_lp_d = w_lp_d * f_nyquist /np.pi  # convert from rad/s to Hz
+
     # Baseband signal
     t = np.arange(0, yr.shape[0]) * Ts  
 

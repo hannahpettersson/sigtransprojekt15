@@ -63,7 +63,7 @@ def main():
     xc = Ac * np.sin(wc * t)                            
     xm = xb * xc
     #bandpass filter
-    xm = signal.lfilter(bb, ab, xm)
+    # xm = signal.lfilter(bb, ab, xm)
 
     xt = xm
 
