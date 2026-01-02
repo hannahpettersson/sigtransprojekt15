@@ -67,6 +67,12 @@ def main():
 
     yb = ybi + 1j*ybq
 
+    vol_lvl = np.abs(yb) # Turns complex values into their magnitude (volume levels)
+    vol_values = vol_lvl > 0.2 * np.max(vol_lvl) # True/false values (is volume level at least 20% of max volume level?)
+    start = np.argmax(vol_values) # First index where volume level is at least 20% of max volume level
+    end = len(vol_values) - np.argmax(np.flipud(vol_values)) # Last index where volume level is at least 20% of max volume level
+    yb = yb[start:end] # Trim yb to only include the part with the signal
+
     # Symbol decoding
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     br = wcs.decode_baseband_signal(yb, Tb, s_freq)
