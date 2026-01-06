@@ -11,7 +11,7 @@ import argparse
 import numpy as np
 from scipy import signal
 import sounddevice as sd
-
+import matplotlib.pyplot as plt
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
@@ -67,15 +67,58 @@ def main():
 
     yb = ybi + 1j*ybq
 
-    vol_lvl = np.abs(yb) # Turns complex values into their magnitude (volume levels)
-    vol_values = vol_lvl > 0.2 * np.max(vol_lvl) # True/false values (is volume level at least 20% of max volume level?)
-    start = np.argmax(vol_values) # First index where volume level is at least 20% of max volume level
-    end = len(vol_values) - np.argmax(np.flipud(vol_values)) # Last index where volume level is at least 20% of max volume level
-    yb = yb[start:end] # Trim yb to only include the part with the signal
+    # vol_lvl = np.abs(yb) # Turns complex values into their magnitude (volume levels)
+    # vol_values = vol_lvl > 0.2 * np.max(vol_lvl) # True/false values (is volume level at least 20% of max volume level?)
+    # start = np.argmax(vol_values) # First index where volume level is at least 20% of max volume level
+    # end = len(vol_values) - np.argmax(np.flipud(vol_values)) # Last index where volume level is at least 20% of max volume level
+    # yb = yb[start:end] # Trim yb to only include the part with the signal
 
     # Symbol decoding
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
+    
+#     preamble = np.array([1,1,1,1,1,-1,-1,1,1,-1,1,-1,1])
+#     template = wcs.encode_baseband_signal(preamble, Tb, s_freq)
+#     correlation = signal.correlate(yb, template, mode='valid') #jämför två signaler
+#     start_idx = np.argmax(np.abs(correlation))
+    
+#     phase_offset = np.angle(correlation[start_idx])
+    
+#     yb_corr = yb * np.exp(-1j * phase_offset)
+
+# # --- THE ULTIMATE HELLO WORLD FINDER ---
+#     rotations = [1, 1j, -1, -1j] # 0, 90, 180, 270 degrees
+#     rotation_names = ["0 deg", "90 deg", "180 deg", "270 deg"]
+
+#     print("Searching Time and Phase combinations...")
+
+#     for r_idx, rot in enumerate(rotations):
+#         # Apply rotation to the whole signal
+#         yb_rotated = yb_corr * rot
+    
+#         for offset in range(-20, 20):
+#             try:
+#                 test_start = start_idx + len(template) + offset
+#                 yb_test = yb_rotated[test_start:]
+            
+#                 br_test = wcs.decode_baseband_signal(yb_test, Tb, s_freq)
+#                 data_test = wcs.decode_string(br_test)
+            
+#             # Check for any recognizable part of "Hello"
+#                 if "ell" in data_test.lower():
+#                     print(f"\n!!! SUCCESS !!!")
+#                     print(f"Rotation: {rotation_names[r_idx]}, Offset: {offset}")
+#                     print(f"Decoded Message: {data_test}")
+#                     return # Exit main once found
+                
+#             except:
+#                 continue
+
+#     #message_start = start_idx + len(template)
+#     #yb_trim = yb_corr[message_start:]
+#     yb_trim = yb_corr[start_idx + len(template):]
+    
     br = wcs.decode_baseband_signal(yb, Tb, s_freq)
+    print(f"First 20 bits decoded: {br[:20]}")
     data_rx = wcs.decode_string(br)
     print(f'Received: {data_rx} (no of bits: {len(br)}).')
 
