@@ -118,7 +118,7 @@ def main():
 #     yb_trim = yb_corr[start_idx + len(template):]
     
     br = wcs.decode_baseband_signal(yb, Tb, s_freq)
-    print(f"First 20 bits decoded: {br[:20]}")
+    #print(f"First 20 bits decoded: {br[:20]}")
     data_rx = wcs.decode_string(br)
     print(f'Received: {data_rx} (no of bits: {len(br)}).')
 
