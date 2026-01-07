@@ -66,7 +66,8 @@ def main():
 
     # Encode baseband signal
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
-    xb = wcs.encode_baseband_signal(bs, Tb, s_freq)
+    bs_tx = np.concatenate((bs, [1]))
+    xb = wcs.encode_baseband_signal(bs_tx, Tb, s_freq)
     
 
     t = np.arange(0, xb.shape[0]) * Ts 
