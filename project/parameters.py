@@ -21,15 +21,22 @@ s_freq = fc * K
 Ts = 1 / s_freq 
 f_nyquist = s_freq/2 #22000 Hz
 
+# Bandpass filter specifications
 Ap = 2
 As = 40
 
+wp_arr = [4300, 4500] # passband edges bandpass filter 
+ws_arr = [4250, 4550] #stopband edges bandpass filter
+
+# Lowpass filter specifications
 Ap_lp = 0.8 #passband ripple in db
 As_lp = 40 #stopband attenuation in db
-Wp_lp = 600 #HZ passband edge
-Ws_lp = 1100 #Hz stopband edge
-wp_arr = [4300, 4500]
-ws_arr = [4250, 4550]
+
+#Wp_lp = 600 #rad/s passband edge lowpass
+#Ws_lp = 1100 #rad/s stopband edge lowpass
+
+Wp_lp = 95 #HZ passband edge lowpass
+Ws_lp = 175 #Hz stopband edge lowpass
 
 # Analog filter parameters (BP, LP)
 

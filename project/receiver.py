@@ -54,22 +54,23 @@ def main():
     yr = yr[:, 0]           # Remove second channel
 
     # TODO: Implement demodulation, etc. here
-    # ...
     
-    yr_filt = signal.lfilter(cb_d, ca_d, yr) #bandpass filter
+    yr_filt = signal.lfilter(cb_d, ca_d, yr) # bandpass filter används för att filtrera bort brus och isolera rätt kanal
     t_1 = np.arange(len(yr_filt)) /s_freq
 
     # Calculate complex baseband signal
     ybi = yr_filt * 2 * np.cos(wc*t_1)
-    ybi = signal.lfilter(b_lp_d, a_lp_d, ybi)
+    ybi = signal.lfilter(b_lp_d, a_lp_d, ybi) # lowpass filter på inphase komponenten och filtrera bort högfrekventa komponenter
     ybq = yr_filt * (-2) * np.sin(wc*t_1)
-    ybq = signal.lfilter(b_lp_d, a_lp_d, ybq)
+    ybq = signal.lfilter(b_lp_d, a_lp_d, ybq) # lowpass filter på quadrature komponenten och filtrera bort högfrekventa komponenter
+  
 
-    yb = ybi + 1j*ybq
+    yb = ybi + 1j*ybq # komplex baseband signal. Mottagaren kan läsa av signalen oberoende av fasförskjutning.
+    # Demoduleringen skapar en oönskad högfrekvent signal  vid 2*fc = 8800 Hz. Lowpass filtret tar bort denna.
+    # ner tillbaka till baseband signal
 
-    br = wcs.decode_baseband_signal(yb, Tb, s_freq)
-    #print(f"First 20 bits decoded: {br[:20]}")
-    data_rx = wcs.decode_string(br)
+    br = wcs.decode_baseband_signal(yb, Tb, s_freq) # går från ljudvåg till bitsekvens
+    data_rx = wcs.decode_string(br) # går från bitsekvens till sträng
     print(f'Received: {data_rx} (no of bits: {len(br)}).')
 
 

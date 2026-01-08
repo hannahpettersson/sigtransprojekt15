@@ -57,19 +57,14 @@ def main():
     else:
         bs = wcs.encode_string(data)
 
-    preamble = np.array([1,1,1,1,1,-1,-1,1,1,-1,1,-1,1])
-    
-    bs_con_preamble = np.concatenate((preamble, bs))
-    
     # Transmit signal
     print(f'Sending: {data} (no of bits: {len(bs)}; message duration: {np.round(len(bs)*Tb, 1)} s).')
 
     # Encode baseband signal
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     bs_tx = np.concatenate((bs, [1]))
-    xb = wcs.encode_baseband_signal(bs_tx, Tb, s_freq)
+    xb = wcs.encode_baseband_signal(bs_tx, Tb, s_freq) # Skapar baseband signal i vågformat (från bitsekvens)
     
-
     t = np.arange(0, xb.shape[0]) * Ts 
     xc = Ac * np.sin(wc * t)
     xm = xb * xc
