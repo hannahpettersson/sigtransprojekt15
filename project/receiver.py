@@ -31,6 +31,12 @@ b_lp_d, a_lp_d = signal.iirdesign(wp=wp_lp_norm_d, ws=ws_lp_norm_d, gpass=Ap_lp,
 w_lp_d, h_lp_d = signal.freqz(b_lp_d, a_lp_d)
 f_lp_d = w_lp_d * f_nyquist /np.pi  # convert from rad/s to Hz
 
+# N_lp_d, Wn_lp_d = signal.cheb2ord(wp_lp_norm_d, ws_lp_norm_d, Ap, As, analog=False)
+# N_lp_d = int(np.ceil(Nc_d))
+# b_lp_d, a_lp_d = signal.iirdesign(wp=wp_lp_norm_d, ws=ws_lp_norm_d, gpass=Ap_lp, gstop=As_lp, ftype='cheby2', output='ba', analog=False)
+# w_lp_d, h_lp_d = signal.freqz(cb_d, ca_d)
+# f_lp_d = w_lp_d * f_nyquist /np.pi  # convert from rad/s to Hz
+
 def main():
     parser = argparse.ArgumentParser(
         prog='receiver',

@@ -56,10 +56,6 @@ def main():
         bs = np.array([bit for bit in map(int, data)])
     else:
         bs = wcs.encode_string(data)
-
-    preamble = np.array([1,1,1,1,1,-1,-1,1,1,-1,1,-1,1])
-    
-    bs_con_preamble = np.concatenate((preamble, bs))
     
     # Transmit signal
     print(f'Sending: {data} (no of bits: {len(bs)}; message duration: {np.round(len(bs)*Tb, 1)} s).')
@@ -68,7 +64,6 @@ def main():
     # TODO: Adjust fs (lab 2 only, leave untouched for lab 1 unless you know what you are doing)
     bs_tx = np.concatenate((bs, [1]))
     xb = wcs.encode_baseband_signal(bs_tx, Tb, s_freq)
-    
 
     t = np.arange(0, xb.shape[0]) * Ts 
     xc = Ac * np.sin(wc * t)
